@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Objetivos - FinanzApp</title>
+  <link rel="stylesheet" href="styles.css">
+  <link href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-dark@4/dark.css" rel="stylesheet">
+</head>
+<body>
+  <nav>
+    <h1><a href="index.html" class="logo-link">FinanzApp</a></h1>
+    <div class="menu-toggle">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+    <ul class="menu">
+      <li><a href="index.html">Dashboard</a></li>
+      <li><a href="transacciones.html">Transacciones</a></li>
+      <li><a href="objetivos.html" class="active">Objetivos</a></li>
+      <li><a href="estadisticas.html">Estadísticas</a></li>
+    </ul>
+  </nav>
+
+  <div class="container">
+    <div class="section-header">
+      <h2 class="page-title">Objetivos Financieros</h2>
+      <p class="subtitle">Planifica y alcanza tus metas</p>
+    </div>
+    
+    <!-- Sección de objetivos sugeridos -->
+    <div id="suggestedGoalsSection" class="suggested-goals-section" style="display: none;">
+      <div class="section-header">
+        <h3>Objetivos Sugeridos</h3>
+        <p class="subtitle">Selecciona uno de nuestros objetivos predefinidos</p>
+      </div>
+      
+      <div class="suggested-goals-grid">
+        <div class="suggested-goal-card">
+          <div class="goal-icon">💰</div>
+          <h4>Fondo de Emergencia</h4>
+          <p>Ahorra 3-6 meses de gastos para emergencias imprevistas</p>
+          <div class="goal-details">
+            <span>Plazo sugerido: 12 meses</span>
+            <span>Prioridad: Alta</span>
+          </div>
+          <div class="goal-actions">
+            <button onclick="createSuggestedGoal('emergency', 'Fondo de Emergencia', 10000, 12)" class="create-goal-btn">
+              Crear Objetivo
+            </button>
+            <button onclick="editSuggestedGoal('emergency', 'Fondo de Emergencia', 10000, 12)" class="edit-goal-btn">
+              Personalizar
+            </button>
+          </div>
+        </div>
+
+        <div class="suggested-goal-card">
+          <div class="goal-icon">🏠</div>
+          <h4>Entrada para Vivienda</h4>
+          <p>Ahorra para el pago inicial de tu futura casa</p>
+          <div class="goal-details">
+            <span>Plazo sugerido: 36 meses</span>
+            <span>Prioridad: Alta</span>
+          </div>
+          <div class="goal-actions">
+            <button onclick="createSuggestedGoal('house', 'Entrada para Vivienda', 50000, 36)" class="create-goal-btn">
+              Crear Objetivo
+            </button>
+            <button onclick="editSuggestedGoal('house', 'Entrada para Vivienda', 50000, 36)" class="edit-goal-btn">
+              Personalizar
+            </button>
+          </div>
+        </div>
+
+        <div class="suggested-goal-card">
+          <div class="goal-icon">🚗</div>
+          <h4>Compra de Vehículo</h4>
+          <p>Ahorra para comprar tu próximo auto al contado</p>
+          <div class="goal-details">
+            <span>Plazo sugerido: 24 meses</span>
+            <span>Prioridad: Media</span>
+          </div>
+          <div class="goal-actions">
+            <button onclick="createSuggestedGoal('car', 'Compra de Vehículo', 25000, 24)" class="create-goal-btn">
+              Crear Objetivo
+            </button>
+            <button onclick="editSuggestedGoal('car', 'Compra de Vehículo', 25000, 24)" class="edit-goal-btn">
+              Personalizar
+            </button>
+          </div>
+        </div>
+
+        <div class="suggested-goal-card">
+          <div class="goal-icon">✈️</div>
+          <h4>Viaje de Vacaciones</h4>
+          <p>Planifica tus próximas vacaciones sin deudas</p>
+          <div class="goal-details">
+            <span>Plazo sugerido: 12 meses</span>
+            <span>Prioridad: Media</span>
+          </div>
+          <div class="goal-actions">
+            <button onclick="createSuggestedGoal('vacation', 'Viaje de Vacaciones', 5000, 12)" class="create-goal-btn">
+              Crear Objetivo
+            </button>
+            <button onclick="editSuggestedGoal('vacation', 'Viaje de Vacaciones', 5000, 12)" class="edit-goal-btn">
+              Personalizar
+            </button>
+          </div>
+        </div>
+
+        <div class="suggested-goal-card">
+          <div class="goal-icon">📚</div>
+          <h4>Educación Continua</h4>
+          <p>Invierte en tu desarrollo profesional</p>
+          <div class="goal-details">
+            <span>Plazo sugerido: 18 meses</span>
+            <span>Prioridad: Alta</span>
+          </div>
+          <div class="goal-actions">
+            <button onclick="createSuggestedGoal('education', 'Educación Continua', 15000, 18)" class="create-goal-btn">
+              Crear Objetivo
+            </button>
+            <button onclick="editSuggestedGoal('education', 'Educación Continua', 15000, 18)" class="edit-goal-btn">
+              Personalizar
+            </button>
+          </div>
+        </div>
+
+        <div class="suggested-goal-card">
+          <div class="goal-icon">👰</div>
+          <h4>Boda Soñada</h4>
+          <p>Planifica tu día especial sin preocupaciones financieras</p>
+          <div class="goal-details">
+            <span>Plazo sugerido: 24 meses</span>
+            <span>Prioridad: Media</span>
+          </div>
+          <div class="goal-actions">
+            <button onclick="createSuggestedGoal('wedding', 'Boda Soñada', 20000, 24)" class="create-goal-btn">
+              Crear Objetivo
+            </button>
+            <button onclick="editSuggestedGoal('wedding', 'Boda Soñada', 20000, 24)" class="edit-goal-btn">
+              Personalizar
+            </button>
+          </div>
+        </div>
+
+        <div class="suggested-goal-card">
+          <div class="goal-icon">🏆</div>
+          <h4>Inversión Inicial</h4>
+          <p>Comienza tu portafolio de inversiones</p>
+          <div class="goal-details">
+            <span>Plazo sugerido: 12 meses</span>
+            <span>Prioridad: Media</span>
+          </div>
+          <div class="goal-actions">
+            <button onclick="createSuggestedGoal('investment', 'Inversión Inicial', 5000, 12)" class="create-goal-btn">
+              Crear Objetivo
+            </button>
+            <button onclick="editSuggestedGoal('investment', 'Inversión Inicial', 5000, 12)" class="edit-goal-btn">
+              Personalizar
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <button class="close-suggested-goals" onclick="closeSuggestedGoals()">
+        Volver a Objetivos
+      </button>
+    </div>
+
+    <div class="goals-grid">
+      <div class="goal-actions">
+        <button class="goal-action-btn primary" onclick="showGoalModal()">
+          <div class="icon-wrapper">
+            <span class="action-icon">+</span>
+          </div>
+          <div class="action-content">
+            <h3>Nuevo Objetivo</h3>
+            <p>Crear una nueva meta financiera</p>
+          </div>
+        </button>
+        <button class="goal-action-btn secondary" onclick="showTemplateGoals()">
+          <div class="icon-wrapper">
+            <span class="action-icon">⭐</span>
+          </div>
+          <div class="action-content">
+            <h3>Objetivos Sugeridos</h3>
+            <p>Plantillas predefinidas</p>
+          </div>
+        </button>
+      </div>
+      <div id="goalsList"></div>
+    </div>
+  </div>
+
+  <!-- Modal de objetivo mejorado -->
+  <div id="goalModal" class="modal">
+    <div class="modal-content goal-modal">
+      <div class="modal-header">
+        <h2>🎯 Nuevo Objetivo Financiero</h2>
+        <button class="close-modal" onclick="closeModal('goalModal')">&times;</button>
+      </div>
+      <form id="goalForm">
+        <div class="input-group">
+          <label for="goalName">Nombre del objetivo</label>
+          <input type="text" id="goalName" placeholder="Ej: Viaje a Europa" required>
+        </div>
+        <div class="input-group">
+          <label for="goalAmount">Monto objetivo</label>
+          <div class="amount-input">
+            <span class="currency-symbol">$</span>
+            <input type="number" id="goalAmount" placeholder="0.00" required>
+          </div>
+        </div>
+        <div class="input-group">
+          <label for="goalDate">Fecha límite</label>
+          <input type="date" id="goalDate" required>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="cancel-btn" onclick="closeModal('goalModal')">Cancelar</button>
+          <button type="submit" class="save-btn">Guardar Objetivo</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Add Transaction Modal for Goal Contributions -->
+  <div id="transactionModal" class="modal">
+    <div class="modal-content">
+      <h2>Contribuir al Objetivo</h2>
+      <form id="transactionForm">
+        <input type="number" id="amount" placeholder="Monto" required>
+        <input type="text" id="description" placeholder="Descripción" required>
+        <select id="category" required>
+          <option value="savings">Ahorro</option>
+        </select>
+        <input type="hidden" id="goalContribution">
+        <div class="modal-actions">
+          <button type="submit">Guardar</button>
+          <button type="button" onclick="closeModal('transactionModal')">Cancelar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Add a new modal for editing suggested goals -->
+  <div id="editSuggestedGoalModal" class="modal">
+    <div class="modal-content goal-modal">
+      <div class="modal-header">
+        <h2>Personalizar Objetivo Sugerido</h2>
+        <button class="close-modal" onclick="closeModal('editSuggestedGoalModal')">&times;</button>
+      </div>
+      <form id="editSuggestedGoalForm">
+        <div class="input-group">
+          <label for="editGoalName">Nombre del objetivo</label>
+          <input type="text" id="editGoalName" required>
+        </div>
+        <div class="input-group">
+          <label for="editGoalAmount">Monto objetivo</label>
+          <div class="amount-input">
+            <span class="currency-symbol">$</span>
+            <input type="number" id="editGoalAmount" required>
+          </div>
+        </div>
+        <div class="input-group">
+          <label for="editGoalMonths">Plazo en meses</label>
+          <input type="number" id="editGoalMonths" min="1" required>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="cancel-btn" onclick="closeModal('editSuggestedGoalModal')">Cancelar</button>
+          <button type="submit" class="save-btn">Crear Objetivo Personalizado</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
+  <script>
+    function showGoalModal() {
+      document.getElementById('goalModal').style.display = 'block';
+    }
+
+    function closeModal(modalId) {
+      document.getElementById(modalId).style.display = 'none';
+    }
+
+    // Handle menu toggle for mobile
+    document.querySelector('.menu-toggle').addEventListener('click', () => {
+      document.querySelector('.menu').classList.toggle('active');
+    });
+  </script>
+  <script type="module">
+    import { showNotification } from './js/notifications.js';
+    import { analyzeFinancialBehavior } from './js/analysis.js';
+    
+    document.addEventListener('DOMContentLoaded', () => {
+      updateGoalsList();
+      setupGoalsEventListeners();
+    });
+
+    function setupGoalsEventListeners() {
+      document.getElementById('goalForm').addEventListener('submit', handleGoalSubmit);
+      document.getElementById('transactionForm').addEventListener('submit', handleContribution);
+    }
+
+    window.deleteGoal = function(goalId) {
+      Swal.fire({
+        title: '¿Estás seguro?',
+        text: "Esta acción no se puede deshacer",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#50C878',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Sí, eliminar',
+        cancelButtonText: 'Cancelar'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          const goals = JSON.parse(localStorage.getItem('goals')) || [];
+          const updatedGoals = goals.filter(g => g.id !== goalId);
+          localStorage.setItem('goals', JSON.stringify(updatedGoals));
+          
+          // También eliminar las transacciones asociadas
+          const transactions = JSON.parse(localStorage.getItem('transactions')) || [];
+          const updatedTransactions = transactions.filter(t => t.goalContribution !== goalId);
+          localStorage.setItem('transactions', JSON.stringify(updatedTransactions));
+          
+          updateGoalsList();
+          showNotification('Objetivo eliminado', 'El objetivo ha sido eliminado exitosamente', 'success');
+        }
+      });
+    };
+
+    function handleGoalSubmit(e) {
+      e.preventDefault();
+
+      const goal = {
+        id: Date.now(),
+        name: document.getElementById('goalName').value,
+        amount: parseFloat(document.getElementById('goalAmount').value),
+        date: document.getElementById('goalDate').value,
+        currentAmount: 0,
+        completed: false,
+        overdueNotified: false
+      };
+
+      const goals = JSON.parse(localStorage.getItem('goals')) || [];
+      goals.push(goal);
+      localStorage.setItem('goals', JSON.stringify(goals));
+
+      showNotification(
+        'Nuevo objetivo financiero',
+        `${goal.name} - $${goal.amount}`,
+        'success'
+      );
+
+      updateGoalsList();
+      closeModal('goalModal');
+      e.target.reset();
+    }
+
+    let currentGoal = null;
+
+    window.contributeToGoal = function(goalId) {
+      const goals = JSON.parse(localStorage.getItem('goals')) || [];
+      currentGoal = goals.find(g => g.id === goalId);
+      if (currentGoal) {
+        const transactionModal = document.getElementById('transactionModal');
+        document.getElementById('description').value = `Contribución a: ${currentGoal.name}`;
+        document.getElementById('goalContribution').value = goalId;
+        transactionModal.style.display = 'block';
+      }
+    };
+
+    function handleContribution(e) {
+      e.preventDefault();
+      
+      const amount = parseFloat(document.getElementById('amount').value);
+      const description = document.getElementById('description').value;
+      const goalId = document.getElementById('goalContribution').value;
+
+      const transaction = {
+        id: Date.now(),
+        type: 'expense',
+        amount: -amount, // Negative because it's an expense/contribution
+        description,
+        category: 'savings',
+        necessity: 'medium',
+        date: new Date().toISOString(),
+        goalContribution: parseInt(goalId)
+      };
+
+      const transactions = JSON.parse(localStorage.getItem('transactions')) || [];
+      transactions.push(transaction);
+      localStorage.setItem('transactions', JSON.stringify(transactions));
+
+      showNotification(
+        'Contribución realizada',
+        `$${amount} - ${description}`,
+        'success'
+      );
+
+      updateGoalsList();
+      closeModal('transactionModal');
+      e.target.reset();
+    }
+
+    function formatMoney(amount) {
+      return new Intl.NumberFormat('es-MX', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      }).format(Math.abs(amount));
+    }
+
+    function updateGoalsList() {
+      const goals = JSON.parse(localStorage.getItem('goals')) || [];
+      const transactions = JSON.parse(localStorage.getItem('transactions')) || [];
+      const list = document.getElementById('goalsList');
+      
+      list.innerHTML = '';
+
+      goals.forEach(goal => {
+        const goalTransactions = transactions.filter(t => t.goalContribution === goal.id);
+        const currentAmount = goalTransactions.reduce((sum, t) => sum + Math.abs(t.amount), 0);
+        const progress = (currentAmount / goal.amount) * 100;
+        const deadline = new Date(goal.date);
+        const now = new Date();
+        const isOverdue = now > deadline && progress < 100;
+        const isCompleted = progress >= 100;
+        const daysLeft = Math.ceil((deadline - now) / (1000 * 60 * 60 * 24));
+
+        if (isCompleted && !goal.completed) {
+          goal.completed = true;
+          localStorage.setItem('goals', JSON.stringify(goals));
+        }
+
+        const card = document.createElement('div');
+        card.className = 'goal-card';
+        card.innerHTML = `
+          <div class="goal-header">
+            <h3>📎 ${goal.name}</h3>
+            <button class="delete-goal" onclick="deleteGoal(${goal.id})" title="Eliminar objetivo">
+              <svg viewBox="0 0 24 24" width="24" height="24">
+                <path fill="currentColor" d="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z"/>
+              </svg>
+            </button>
+          </div>
+          <div class="goal-info">
+            <div class="goal-stat">
+              <small>Objetivo</small>
+              <span>$${formatMoney(goal.amount)}</span>
+            </div>
+            <div class="goal-stat">
+              <small>Ahorrado</small>
+              <span>$${formatMoney(currentAmount)}</span>
+            </div>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill" style="width: ${Math.min(progress, 100)}%"></div>
+          </div>
+          <div style="text-align: center; margin: 0.5rem 0;">
+            <strong>${progress.toFixed(1)}% completado</strong>
+          </div>
+          <div class="goal-info">
+            <div class="goal-stat">
+              <small>Fecha límite</small>
+              <span>${new Date(goal.date).toLocaleDateString()}</span>
+            </div>
+            <div class="goal-stat">
+              <small>Días restantes</small>
+              <span>${daysLeft > 0 ? daysLeft : 'Vencido'}</span>
+            </div>
+          </div>
+          ${isCompleted ? 
+            `<div class="completed-tag">
+              <span>🎉 ¡Objetivo Completado!</span>
+             </div>` :
+            isOverdue ?
+            `<div class="overdue-tag">
+              <p>⚠️ Meta fuera de plazo</p>
+              <p class="motivation">¡Sigue adelante! Cada esfuerzo cuenta.</p>
+             </div>
+             <button onclick="contributeToGoal(${goal.id})" class="contribute-btn">
+               💰 Continuar contribuyendo
+             </button>` :
+            `<button onclick="contributeToGoal(${goal.id})" class="contribute-btn">
+               💰 Contribuir
+             </button>`
+          }
+        `;
+        list.appendChild(card);
+      });
+    }
+
+    window.createSuggestedGoal = function(type, name, amount, months) {
+      const futureDate = new Date();
+      futureDate.setMonth(futureDate.getMonth() + months);
+      
+      const goal = {
+        id: Date.now(),
+        name: name,
+        amount: amount,
+        date: futureDate.toISOString().split('T')[0],
+        currentAmount: 0,
+        completed: false,
+        type: type
+      };
+
+      const goals = JSON.parse(localStorage.getItem('goals')) || [];
+      goals.push(goal);
+      localStorage.setItem('goals', JSON.stringify(goals));
+
+      showNotification(
+        'Objetivo creado',
+        `Se ha creado el objetivo: ${name}`,
+        'success'
+      );
+
+      closeSuggestedGoals();
+      updateGoalsList();
+    };
+
+    window.showTemplateGoals = function() {
+      document.querySelector('.goals-grid').style.display = 'none';
+      document.getElementById('suggestedGoalsSection').style.display = 'block';
+    };
+
+    window.closeSuggestedGoals = function() {
+      document.querySelector('.goals-grid').style.display = 'grid';
+      document.getElementById('suggestedGoalsSection').style.display = 'none';
+    };
+  </script>
+
+  <script>
+    window.editSuggestedGoal = function(type, name, amount, months) {
+      const editModal = document.getElementById('editSuggestedGoalModal');
+      const form = document.getElementById('editSuggestedGoalForm');
+      
+      // Pre-fill form with suggested goal details
+      document.getElementById('editGoalName').value = name;
+      document.getElementById('editGoalAmount').value = amount;
+      document.getElementById('editGoalMonths').value = months;
+      
+      // Show modal
+      editModal.style.display = 'block';
+      
+      // Handle form submission
+      form.onsubmit = function(e) {
+        e.preventDefault();
+        
+        const customName = document.getElementById('editGoalName').value;
+        const customAmount = parseFloat(document.getElementById('editGoalAmount').value);
+        const customMonths = parseInt(document.getElementById('editGoalMonths').value);
+        
+        const futureDate = new Date();
+        futureDate.setMonth(futureDate.getMonth() + customMonths);
+        
+        const goal = {
+          id: Date.now(),
+          name: customName,
+          amount: customAmount,
+          date: futureDate.toISOString().split('T')[0],
+          currentAmount: 0,
+          completed: false,
+          type: type
+        };
+
+        const goals = JSON.parse(localStorage.getItem('goals')) || [];
+        goals.push(goal);
+        localStorage.setItem('goals', JSON.stringify(goals));
+
+        showNotification(
+          'Objetivo personalizado creado',
+          `Se ha creado el objetivo: ${customName}`,
+          'success'
+        );
+
+        closeModal('editSuggestedGoalModal');
+        closeSuggestedGoals();
+        updateGoalsList();
+      };
+    };
+  </script>
+</body>
+</html>

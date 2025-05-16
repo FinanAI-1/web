@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Transacciones - FinanzApp</title>
+  <link rel="stylesheet" href="styles.css">
+  <link href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-dark@4/dark.css" rel="stylesheet">
+  <style>
+    /* Add these styles to your existing CSS */
+    .transaction-tags {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-top: 0.3rem;
+    }
+
+    .goal-contribution-tag {
+      background: rgba(80, 200, 120, 0.1);
+      color: var(--accent-color);
+      padding: 0.2rem 0.5rem;
+      border-radius: var(--border-radius);
+      font-size: 0.8rem;
+      cursor: pointer;
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    .goal-contribution-tag:hover .goal-tooltip {
+      display: block;
+    }
+
+    .goal-tooltip {
+      display: none;
+      position: absolute;
+      bottom: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--card-bg);
+      padding: 1rem;
+      border-radius: var(--border-radius);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      width: 250px;
+      z-index: 100;
+      margin-bottom: 0.5rem;
+    }
+
+    .goal-tooltip::after {
+      content: '';
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      border: 8px solid transparent;
+      border-top-color: var(--card-bg);
+    }
+
+    .goal-tooltip strong {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: var(--accent-color);
+    }
+
+    .goal-tooltip p {
+      margin: 0.3rem 0;
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+    }
+
+    .goal-progress {
+      margin: 0.8rem 0;
+    }
+
+    .goal-progress .progress-bar {
+      height: 6px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 3px;
+      overflow: hidden;
+      margin-bottom: 0.3rem;
+    }
+
+    .goal-progress .progress-fill {
+      height: 100%;
+      background: var(--accent-color);
+      transition: width 0.3s ease;
+    }
+
+    .goal-progress span {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <h1><a href="index.html" class="logo-link">FinanzApp</a></h1>
+    <div class="menu-toggle">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+    <ul class="menu">
+      <li><a href="index.html">Dashboard</a></li>
+      <li><a href="transacciones.html" class="active">Transacciones</a></li>
+      <li><a href="objetivos.html">Objetivos</a></li>
+      <li><a href="estadisticas.html">Estadísticas</a></li>
+    </ul>
+  </nav>
+
+  <div class="container">
+    <div class="section-header">
+      <h2 class="page-title">Registro de Transacciones</h2>
+      <p class="subtitle">Historial detallado de tus movimientos</p>
+    </div>
+    <div class="transactions-filters">
+      <input type="text" id="searchTransaction" placeholder="Buscar transacción..." class="search-input">
+      <select id="filterCategory" class="filter-select">
+        <option value="all">Todas las categorías</option>
+        <optgroup label="Gastos Esenciales">
+          <option value="food">Alimentación</option>
+          <option value="bills">Servicios</option>
+          <option value="health">Salud</option>
+          <option value="housing">Vivienda</option>
+          <option value="education">Educación</option>
+        </optgroup>
+        <optgroup label="Gastos Importantes">
+          <option value="transport">Transporte</option>
+          <option value="clothing">Ropa</option>
+          <option value="insurance">Seguros</option>
+          <option value="maintenance">Mantenimiento</option>
+        </optgroup>
+        <optgroup label="Gastos No Esenciales">
+          <option value="entertainment">Entretenimiento</option>
+          <option value="hobbies">Pasatiempos</option>
+          <option value="dining">Restaurantes</option>
+          <option value="shopping">Compras</option>
+          <option value="travel">Viajes</option>
+        </optgroup>
+        <optgroup label="Ingresos">
+          <option value="salary">Salario</option>
+          <option value="other">Otros</option>
+        </optgroup>
+      </select>
+      <select id="filterDate" class="filter-select">
+        <option value="all">Todo el tiempo</option>
+        <option value="today">Hoy</option>
+        <option value="week">Esta semana</option>
+        <option value="month">Este mes</option>
+        <option value="year">Este año</option>
+      </select>
+    </div>
+
+    <div class="transactions-list" id="transactionsList"></div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
+  <script>
+    document.querySelector('.menu-toggle').addEventListener('click', () => {
+      document.querySelector('.menu').classList.toggle('active');
+    });
+  </script>
+  <script type="module">
+    import { showNotification } from './js/notifications.js';
+    
+    document.addEventListener('DOMContentLoaded', () => {
+      updateTransactionsList();
+      setupFilters();
+    });
+
+    function formatMoney(amount) {
+      return new Intl.NumberFormat('es-MX', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      }).format(Math.abs(amount));
+    }
+
+    function setupFilters() {
+      const searchInput = document.getElementById('searchTransaction');
+      const categoryFilter = document.getElementById('filterCategory');
+      const dateFilter = document.getElementById('filterDate');
+
+      searchInput.addEventListener('input', updateTransactionsList);
+      categoryFilter.addEventListener('change', updateTransactionsList);
+      dateFilter.addEventListener('change', updateTransactionsList);
+    }
+
+    function updateTransactionsList() {
+      let transactions = JSON.parse(localStorage.getItem('transactions')) || [];
+      const goals = JSON.parse(localStorage.getItem('goals')) || [];
+      const list = document.getElementById('transactionsList');
+      const searchTerm = document.getElementById('searchTransaction').value.toLowerCase();
+      const categoryFilter = document.getElementById('filterCategory').value;
+      const dateFilter = document.getElementById('filterDate').value;
+
+      // Apply filters
+      transactions = transactions.filter(transaction => {
+        const matchesSearch = transaction.description.toLowerCase().includes(searchTerm);
+        const matchesCategory = categoryFilter === 'all' || transaction.category === categoryFilter;
+        const matchesDate = filterByDate(transaction.date, dateFilter);
+        return matchesSearch && matchesCategory && matchesDate;
+      });
+
+      // Sort transactions by date (most recent first)
+      transactions.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+      // Group transactions by date
+      const groupedTransactions = groupTransactionsByDate(transactions);
+
+      // Render transactions
+      list.innerHTML = '';
+      Object.entries(groupedTransactions).forEach(([date, dayTransactions]) => {
+        const dateGroup = document.createElement('div');
+        dateGroup.className = 'transaction-date-group';
+        dateGroup.innerHTML = `
+          <div class="date-header">
+            <span>${formatDate(date)}</span>
+            <span class="daily-total">${calculateDailyTotal(dayTransactions)}</span>
+          </div>
+        `;
+
+        const transactionsList = document.createElement('div');
+        transactionsList.className = 'transactions-group';
+
+        dayTransactions.forEach(transaction => {
+          // Find associated goal if exists
+          const associatedGoal = transaction.goalContribution ? 
+            goals.find(g => g.id === transaction.goalContribution) : null;
+
+          const item = document.createElement('div');
+          item.className = `transaction-item ${transaction.amount > 0 ? 'income' : 'expense'}`;
+          item.innerHTML = `
+            <div class="transaction-icon ${transaction.category}">
+              ${getCategoryIcon(transaction.category)}
+            </div>
+            <div class="transaction-details">
+              <strong>${transaction.description}</strong>
+              <div class="transaction-tags">
+                <span class="category-tag">${getCategoryName(transaction.category)}</span>
+                ${associatedGoal ? 
+                  `<span class="goal-contribution-tag">
+                    🎯 ${associatedGoal.name}
+                    <div class="goal-tooltip">
+                      <strong>Objetivo: ${associatedGoal.name}</strong>
+                      <div class="goal-progress">
+                        <div class="progress-bar">
+                          <div class="progress-fill" style="width: ${(associatedGoal.currentAmount / associatedGoal.amount) * 100}%"></div>
+                        </div>
+                        <span>${Math.round((associatedGoal.currentAmount / associatedGoal.amount) * 100)}%</span>
+                      </div>
+                      <p>Meta: $${formatMoney(associatedGoal.amount)}</p>
+                      <p>Progreso: $${formatMoney(associatedGoal.currentAmount)}</p>
+                    </div>
+                  </span>` : 
+                  ''
+                }
+              </div>
+            </div>
+            <div class="transaction-amount">
+              <span class="${transaction.amount > 0 ? 'income-amount' : 'expense-amount'}">
+                ${transaction.amount > 0 ? '+' : '-'}$${formatMoney(Math.abs(transaction.amount))}
+              </span>
+              <span class="badge ${transaction.necessity}">${transaction.necessity}</span>
+            </div>
+          `;
+          transactionsList.appendChild(item);
+        });
+
+        dateGroup.appendChild(transactionsList);
+        list.appendChild(dateGroup);
+      });
+    }
+
+    function filterByDate(transactionDate, filterType) {
+      const date = new Date(transactionDate);
+      const today = new Date();
+      
+      switch(filterType) {
+        case 'today':
+          return date.toDateString() === today.toDateString();
+        case 'week':
+          const weekAgo = new Date(today.setDate(today.getDate() - 7));
+          return date >= weekAgo;
+        case 'month':
+          return date.getMonth() === today.getMonth() && date.getFullYear() === today.getFullYear();
+        case 'year':
+          return date.getFullYear() === today.getFullYear();
+        default:
+          return true;
+      }
+    }
+
+    function groupTransactionsByDate(transactions) {
+      return transactions.reduce((groups, transaction) => {
+        const date = new Date(transaction.date).toDateString();
+        if (!groups[date]) {
+          groups[date] = [];
+        }
+        groups[date].push(transaction);
+        return groups;
+      }, {});
+    }
+
+    function formatDate(dateString) {
+      const date = new Date(dateString);
+      const today = new Date();
+      const yesterday = new Date(today);
+      yesterday.setDate(yesterday.getDate() - 1);
+
+      if (date.toDateString() === today.toDateString()) {
+        return 'Hoy';
+      } else if (date.toDateString() === yesterday.toDateString()) {
+        return 'Ayer';
+      } else {
+        return date.toLocaleDateString('es-ES', { 
+          weekday: 'long', 
+          day: 'numeric', 
+          month: 'long' 
+        });
+      }
+    }
+
+    function calculateDailyTotal(transactions) {
+      const total = transactions.reduce((sum, t) => sum + t.amount, 0);
+      return `Total: ${total >= 0 ? '+' : '-'}$${formatMoney(Math.abs(total))}`;
+    }
+
+    function getCategoryIcon(category) {
+      const icons = {
+        food: '🍽️',
+        bills: '📄',
+        health: '🏥',
+        housing: '🏠',
+        education: '📚',
+        transport: '🚗',
+        clothing: '👕',
+        insurance: '🛡️',
+        maintenance: '🔧',
+        entertainment: '🎮',
+        hobbies: '🎨',
+        dining: '🍽️',
+        shopping: '🛍️',
+        travel: '✈️',
+        salary: '💰',
+        savings: '🏦',
+        other: '📦'
+      };
+      return icons[category] || '📝';
+    }
+
+    function getCategoryName(category) {
+      const names = {
+        food: 'Alimentación',
+        bills: 'Servicios',
+        health: 'Salud',
+        housing: 'Vivienda',
+        education: 'Educación',
+        transport: 'Transporte',
+        clothing: 'Ropa',
+        insurance: 'Seguros',
+        maintenance: 'Mantenimiento',
+        entertainment: 'Entretenimiento',
+        hobbies: 'Pasatiempos',
+        dining: 'Restaurantes',
+        shopping: 'Compras',
+        travel: 'Viajes',
+        salary: 'Salario',
+        savings: 'Ahorro',
+        other: 'Otros'
+      };
+      return names[category] || category;
+    }
+  </script>
+</body>
+</html>
